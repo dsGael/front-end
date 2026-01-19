@@ -1,0 +1,1 @@
+Página sobre menu de comida, se puede agregar al carrito, cuenta con carga dinámica desde json para los productos

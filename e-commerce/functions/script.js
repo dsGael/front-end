@@ -50,21 +50,21 @@ const bebidas=[
         "nombre": "Refresco",
         "precio": 50,
         "descripcion": "Variedad de sabores",
-        "imagen": "fotos/Hamburguesa.png"
+        "imagen": "fotos/soda.png"
     },
     {
         "id": 8,
         "nombre": "Horchata",
         "precio": 50,
         "descripcion": "Horchata de arroz",
-        "imagen": "fotos/Hamburguesa.png"
+        "imagen": "fotos/soda.png"
     },
     {
         "id": 9,
         "nombre": "Agua",
         "precio": 50,
         "descripcion": "Agua natural",
-        "imagen": "fotos/Hamburguesa.png"
+        "imagen": "fotos/soda.png"
     }
 ]
 
@@ -73,7 +73,7 @@ function cargarProductos(json, elementoId) {
     if (!lista) return;
     json.forEach(producto => {
         const html=`
-            <div class="bloque">
+            <li class="bloque">
                 <div class="nombre"> ${producto.nombre} </div>
                 <div>
                     <img class="imgComida" src="${producto.imagen}" alt="imagen de ${producto.nombre}">
@@ -81,7 +81,7 @@ function cargarProductos(json, elementoId) {
                     <p class="descripcion" >${producto.descripcion}</p>
                 </div>
                 <button class="botonAdd" onclick="agregarCarrito('${producto.nombre}', ${producto.precio}, '${producto.imagen}', '${producto.descripcion}')">agregar</button>
-            </div>
+            </li>
 
         `;
 
@@ -112,14 +112,14 @@ function mostrarCarrito(lista, elementoId) {
     cosas.innerHTML = ""; 
     lista.forEach(producto => {
         const html = `
-             <div class="bloque">
+             <li class="bloque">
                 <div class="nombre"> ${producto.nombre} </div>
                 <div>
                      <img class="imgComida" src="${producto.imagen}" alt="">
                     <h3 class="precio" >$${producto.precio}.00</h3>
                     <p class="descripcion" >${producto.descripcion}</p>
                 </div>
-            </div> 
+            </li> 
         `;
         cosas.innerHTML += html;
     });
