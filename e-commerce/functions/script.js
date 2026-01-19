@@ -112,7 +112,7 @@ function mostrarCarrito(lista, elementoId) {
     cosas.innerHTML = ""; 
     lista.forEach(producto => {
         const html = `
-             <div class="bloque-carrito">
+             <div class="bloque">
                 <div class="nombre"> ${producto.nombre} </div>
                 <div>
                      <img class="imgComida" src="${producto.imagen}" alt="">
