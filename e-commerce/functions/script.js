@@ -9,7 +9,7 @@ const comida=[
     },
     {
         "id": 2,
-        "nombre": "Hamburguesa Doble Carne",
+        "nombre": "Doble Carne",
         "precio": 50,
         "descripcion": "2 CARNES a la parrilla con lechuga, tomate y queso",
         "imagen": "fotos/Hamburguesa.png"
@@ -90,19 +90,26 @@ function cargarProductos(json, elementoId) {
 
 }
 
+function pagarCarrito(){
+    globalThis.location.href="gracias.html";
+    limpiarCarrito();
+}
 
-let carritoList = [];
+
+let carritoList = JSON.parse(localStorage.getItem('carritoList')) || [];
 function agregarCarrito(nombre, precio, imagen, descripcion) {
+    let total = Number.parseFloat(localStorage.getItem('total')) || 0;
     const producto = {
         nombre: nombre,
         precio: precio,
         imagen: imagen,
         descripcion: descripcion
     };
+    total=total+precio;
     carritoList.push(producto);
     alert(`Producto ${nombre} agregado al carrito.`);
-    console.log(carritoList);
-    mostrarCarrito(carritoList, 'lista-carrito');
+    localStorage.setItem('carritoList', JSON.stringify(carritoList));
+    localStorage.setItem('total', total);
 }
 
 
@@ -112,7 +119,7 @@ function mostrarCarrito(lista, elementoId) {
     cosas.innerHTML = ""; 
     lista.forEach(producto => {
         const html = `
-             <li class="bloque">
+             <li class="bloque-carrito">
                 <div class="nombre"> ${producto.nombre} </div>
                 <div>
                      <img class="imgComida" src="${producto.imagen}" alt="">
@@ -123,14 +130,28 @@ function mostrarCarrito(lista, elementoId) {
         `;
         cosas.innerHTML += html;
     });
+
+    let total = Number.parseFloat(localStorage.getItem('total')) || 0;
+    let totalCarrito = document.getElementById('total-carrito');
+    if (totalCarrito) {
+        totalCarrito.textContent = `Total: $${total}.00`;
+    }
+
+
 }
 
 
 
+function limpiarCarrito(){
+    carritoList = [];
+    localStorage.setItem('carritoList', JSON.stringify(carritoList));
+    localStorage.setItem('total', '0');
+    mostrarCarrito(carritoList, 'lista-carrito');
+}
 
 document.addEventListener('DOMContentLoaded', () => {
     cargarProductos(comida, 'lista-comida');
     cargarProductos(bebidas, 'lista-bebidas');
-    mostrarCarrito(carritoList, 'lista-carrito');
-});
+    mostrarCarrito(carritoList, 'lista-carrito');});
+
 

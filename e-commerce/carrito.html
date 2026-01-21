@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Carrito</title>
+    <link rel="stylesheet" href="styles/style.css">
+    <script src="functions/script.js"></script>
+</head>
+<header>
+        <a class="href-index" href="index.html">
+         <img class="icon" src="fotos/icon.png" alt="Logo de burgirs">
+         <h1>BURGIRS</h1>
+       </a>
+
+        <a class="carritoIcon" href="#carrito">
+            <img class="icon" src="fotos/cart.png" alt="boton de carrito">
+        </a>
+
+     
+       
+    </header>
+<body>
+    
+    <h2 class="titulo" id="carrito">Carrito</h2>
+    <div class="contenedor-carrito">
+        <div class="contenedor-ticket" id="ticket">
+            <h3 class="nombre">Ticket</h3>
+            <p class="total" id="total-carrito">Total: $0</p>
+            <button id="cleanBtn" class="botonAdd" onclick="limpiarCarrito()">Limpiar Carrito</button>
+            <button id="payBtn" class="botonAdd"  onclick="pagarCarrito()">Pagar</button>
+        </div>
+
+        <ul class="lista-carrito" id="lista-carrito"> <!--se llena --></ul>
+        
+    </div>
+</body>
+<footer>
+    <p class="footerText">© 2024 Burgirs. Todos los derechos reservados.</p>
+</footer>
+</html>

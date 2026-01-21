@@ -27,19 +27,14 @@
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
-.lista-carrito{
-    margin-left: 2rem;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 1rem;
-    padding: 28px;
-}   
+ 
 
 #carrito{
     margin-top: 6rem;
     margin-bottom: 2rem;
 }
+
+
 
 .footerText{
     text-align: right;
@@ -98,6 +93,18 @@ header{
     gap: 20px; 
 }
 
+.lista-carrito {
+    width: 50%;
+    border: 1px solid #ccc;
+    background-color: white;
+    min-width: none;
+    box-sizing: border-box;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    min-height: 4rem;
+}
+
 @media (min-width: 600px) {
     .lista-productos {
         grid-template-columns: repeat(2, 1fr);
@@ -124,8 +131,9 @@ header{
     }
 }
 
-
-
+#cleanBtn{
+    margin-top: 2rem;
+}
 
 .bloque {
     border: 1px solid #ccc;
@@ -133,6 +141,46 @@ header{
     background-color: white;
     display: flex;
     flex-direction: column;
+}
+
+.contenedor-carrito{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2rem;
+    width: 100%;
+    margin-bottom: 2rem;
+    padding: 0 1.5rem;
+}
+
+.contenedor-ticket{
+    width: 50%;
+    border: 1px solid #ccc;
+    background-color: white;
+    min-width: none;
+    box-sizing: border-box;
+
+    display: flex;
+    flex-direction: column;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.bloque-carrito {
+    border: 1px solid #ccc;
+    padding: 0;
+    background-color: white;
+    display: flex;
+    flex-direction: column;
+    
+
+    
+}
+
+.href-index{
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    color: black;
 }
 
 .nombre {
@@ -171,6 +219,44 @@ header{
     border: 1px solid #ccc;
     font-family: 'Courier New', Courier, monospace;
 }
+
+
+.gracias {
+    margin: 0;
+    padding: 3rem;
+    text-align: center;
+    color: black;
+    font-weight: bold;
+    font-size: 7rem;
+    border: 1px solid #ccc;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+#desglose{
+    margin: 0;
+    padding: 3rem;
+    text-align: center;
+    color: black;
+    font-size: 6rem;
+    font-weight: bold;
+    border: 1px solid #ccc;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+
+.total {
+    margin: 0;
+    padding: 3rem;
+    text-align: center;
+    color: green;
+    font-weight: bold;
+    font-size: 2.5rem;
+    border: 1px solid #ccc;
+    font-family: 'Courier New', Courier, monospace;
+}
+
+
+
 
 .descripcion {
     margin: 0;
