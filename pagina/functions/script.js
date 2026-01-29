@@ -70,6 +70,7 @@ const carros = [
 
 function init() {
     checkAuth();
+    document.getElementById("username").innerText = JSON.parse(localStorage.getItem("user")).user;
     if (!localStorage.getItem("likes")) {
         localStorage.setItem("likes", JSON.stringify([]));
     }
@@ -101,6 +102,8 @@ function login(email, password) {
     } else {
         alert("Invalid email or password.");
     }
+    console.log(user.user)
+
 }
 
 function logout() {
