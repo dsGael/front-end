@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <title>MEOWY</title>
+</head>
+<body class="bg-gray-100 min-h-screen flex flex-col">
+
+    <!-- Header -->
+    <header class="sticky top-0 z-50">
+        <nav class="bg-[#274690] text-white px-6 py-4 flex justify-between items-center shadow-lg border-b-[6px] border-[#FF0035]">
+            <a href="index.html" class="flex items-center gap-3 group transition-all duration-300">
+             
+           
+
+                <h1 class="text-3xl  font-bold tracking-wider text-[#FF0035] group-hover:text-white transition-colors">
+                    MEOWY
+                </h1>
+            </a>
+        </nav>
+    </header>
+
+    <main class="flex-grow container mx-auto px-4 py-8">
+        
+        <div class="text-center mb-8">
+               <h2 class="text-3xl font-extrabold text-gray-800">Generador de Imágenes de Gatos</h2>
+               <p class="text-gray-500 mt-2">Selecciona una opción y genera un gato</p>
+        </div>
+
+        <div class="flex flex-col lg:flex-row gap-6 p-10 items-center justify-center">
+
+           <!-- Left Side: Controls -->
+           <div class="w-full lg:w-1/2 flex justify-center">
+             <div class="w-full max-w-sm bg-white rounded-lg shadow-lg p-6 space-y-4 h-fit">
+               <div class="space-y-6">
+                   <div>
+                       <label for="mode-select" class="block text-sm font-medium text-gray-700 mb-2">Generar</label>
+                       <div class="relative">
+                           <select id="mode-select" class="block w-full pl-3 pr-10 py-3 text-base border-gray-300 focus:outline-none focus:ring-[#FF0035] focus:border-[#FF0035] sm:text-sm rounded-md bg-gray-50 border shadow-sm transition-all cursor-pointer">
+                               <option value="solo">Gato</option>
+                               <option value="text">Gato Con Texto</option>
+                               <option value="gif">Gato pero GIF </option>
+                           </select>
+                       </div>
+                   </div>
+
+                   <div id="inputs" class="min-h-[80px] flex items-center justify-center">
+                       <p class="text-gray-400 italic text-sm" id="placeholder-text">Presiona generar para un gato aleatorio</p>
+                       
+                       <div id="text-input-container" class="w-full hidden">
+                           <label for="meme-text" class="block text-sm font-medium text-gray-700 mb-2">Texto</label>
+                           <input type="text" id="meme-text" placeholder="Texto para la pic" class="shadow-sm focus:ring-[#FF0035] focus:border-[#FF0035] block w-full sm:text-sm border-gray-300 border rounded-md p-3">
+                       </div>
+                   </div>
+
+                   <button id="generate-btn" class="w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-[#FF0035] hover:bg-[#e05e4e] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#FF0035] transition-all transform hover:scale-[1.02] active:scale-95">
+                       GO!
+                   </button>
+               </div>
+             </div>
+           </div>
+
+           <!-- Right Side: Result Display -->
+           <div id="result-container" class="w-full mr-12 lg:w-1/2 flex justify-center items-center min-h-[500px] border-2 border-dashed border-gray-300 rounded-lg bg-gray-50 relative overflow-hidden transition-all duration-300">
+               <p id="empty-state" class="text-gray-400 font-medium">Imagen de gatito</p>
+               <div id="loader" class="hidden absolute inset-0 flex items-center justify-center bg-white bg-opacity-80 z-10">
+                   <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-[#FF0035]"></div>
+               </div>
+               <img id="cat-image" src="" alt="Cat" class="hidden max-h-[600px] w-full object-contain transition-opacity duration-500 opacity-0">
+           </div>
+           
+       </div>
+
+    </main>
+
+    <footer class="bg-white border-t border-gray-200 mt-auto">
+        <div class="max-w-7xl mx-auto py-6 px-4 overflow-hidden sm:px-6 lg:px-8">
+            <p class="mt-1 text-right text-base text-gray-400">
+                &copy; 2026 Cat Pics.
+            </p>
+        </div>
+    </footer>
+
+    <script type="module" src="./functions/script.js"></script>
+</body>
+</html>
