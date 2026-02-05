@@ -1,6 +1,20 @@
 const base_url='https://cataas.com'
 const timeout = 5000; 
 
+// --- Configuración Retry & Circuit Breaker ---
+let failureCount = 0;
+const MAX_FAILURES = 3; 
+const CIRCUIT_RESET_TIME = 10000; // 10s
+let nextTryTime = 0;
+
+const MAX_RETRIES = 2; 
+const RETRY_DELAY = 1500; 
+
+async function wait(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+// Internal Fetch with Timeout
 async function fetchWithTimeout(url, options = {}) {
     const controller = new AbortController();
     const id = setTimeout(() => controller.abort(), timeout);
@@ -11,6 +25,7 @@ async function fetchWithTimeout(url, options = {}) {
             signal: controller.signal
         });
         clearTimeout(id);
+        if (!response.ok) throw new Error(`Error HTTP: ${response.status}`);
         return response;
     } catch (error) {
         clearTimeout(id);
@@ -18,20 +33,58 @@ async function fetchWithTimeout(url, options = {}) {
     }
 }
 
+// Smart Fetch: Retry + Circuit Breaker
+async function fetchSmart(url, options = {}, retries = MAX_RETRIES) {
+    // 1. Check Circuit Breaker
+    if (Date.now() < nextTryTime) {
+        const remaining = Math.ceil((nextTryTime - Date.now()) / 1000);
+        throw new Error(`Sistema inestable. Reintenta en ${remaining}s`);
+    }
+
+    try {
+        const response = await fetchWithTimeout(url, options);
+        
+        // Success: Reset Breaker
+        if (failureCount > 0) {
+            failureCount = 0;
+            nextTryTime = 0;
+            console.log(" Conexión. Circuito cerrado.");
+        }
+        return response;
+
+    } catch (error) {
+        console.warn(`⚠️ Intento fallido (${MAX_RETRIES - retries + 1}/${MAX_RETRIES + 1}): ${error.message}`);
+        
+        failureCount++;
+        
+        if (failureCount >= MAX_FAILURES) {
+            nextTryTime = Date.now() + CIRCUIT_RESET_TIME;
+            console.error(`Circuit Breaker ACTIVADO. Pausa de ${CIRCUIT_RESET_TIME/1000}s`);
+        }
+
+        if (retries > 0 && Date.now() > nextTryTime) {
+            await wait(RETRY_DELAY);
+            return fetchSmart(url, options, retries - 1);
+        }
+
+        throw error;
+    }
+}
+
 export async function getRandomCat() {
-    const response = await fetchWithTimeout(`${base_url}/cat?json=true`);
+    const response = await fetchSmart(`${base_url}/cat?json=true`);
     const data = await response.json();
     return data;
 }
 
 export async function generateCatMeme(text){
-    const response = await fetchWithTimeout(`${base_url}/cat/says/${text}?json=true`);
+    const response = await fetchSmart(`${base_url}/cat/says/${text}?json=true`);
     const data = await response.json();
     return data;
 }
 
 export async function getCatGIF(){
-    const response = await fetchWithTimeout(`${base_url}/cat/gif?json=true`);
+    const response = await fetchSmart(`${base_url}/cat/gif?json=true`);
     const data = await response.json();
     return data;
 }
@@ -116,11 +169,13 @@ function init() {
             console.error(error);
             toggleDisplay(loader, false);
             
-            // 2. Manejo de errores específicos (Timeout / Red)
-            if (error.name === 'AbortError') {
-                 alert("⚠️ La red está muy lenta. La petición tardó demasiado.");
+            // 2. Manejo de errores específicos (Timeout / Red / Circuit Breaker)
+            if (error.message.includes('Circuito abierto')) {
+                alert(error.message); // Muestra mensaje del Circuit Breaker
+            } else if (error.name === 'AbortError') {
+                 alert("⚠️ Tiempo de espera agotado (Timeout). Reintentando...");
             } else {
-                 alert('⚠️ Ocurrió un error de conexión al traer el gato.');
+                 alert(`⚠️ Error: ${error.message || 'Problema de conexión'}`);
             }
         }
     });
