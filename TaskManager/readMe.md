@@ -3,7 +3,7 @@
 Una aplicación de gestión de tareas que utiliza una API desarrollada en NestJS y hosteada en Railway para su fácil acceso.
 
 ---
-## Deployemnt
+## Deployment
 https://front-end-eta-amber.vercel.app/
 
 ## Características 
