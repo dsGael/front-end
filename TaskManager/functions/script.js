@@ -1,4 +1,7 @@
 const API_URL = "https://taskmanagerapi-production-fd8f.up.railway.app/tasks";
+const LOGIN_URL = "https://taskmanagerapi-production-fd8f.up.railway.app/auth/login";
+
+const userId =localStorage.getItem("userId");
 
 const pendingList = document.getElementById("pending-list");
 const completedList = document.getElementById("completed-list");
@@ -7,6 +10,7 @@ const taskInput = document.getElementById("task-input");
 const emptyMsg = document.getElementById("empty-msg");
 const pendingEmpty = document.getElementById("pending-empty");
 const completedEmpty = document.getElementById("completed-empty");
+const logoutBtn = document.getElementById("logout-btn");
 
 function createTaskElement(task) {
   const li = document.createElement("li");
@@ -33,8 +37,7 @@ function createTaskElement(task) {
   deleteBtn.className =
     "p-2 text-red-300 hover:text-red-100 hover:bg-red-700/40 rounded transition";
   deleteBtn.setAttribute("aria-label", "Eliminar tarea");
-  deleteBtn.innerHTML =
-    '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-5 h-5"><path fill-rule="evenodd" d="M16.5 4.478V4.5h3.75a.75.75 0 010 1.5h-.818l-.877 12.156A3 3 0 0115.563 21H8.437a3 3 0 01-2.992-2.844L4.568 6H3.75a.75.75 0 010-1.5H7.5v-.022A2.25 2.25 0 019.75 2.25h4a2.25 2.25 0 012.75 2.228zm-6.75-.022a.75.75 0 00-.75.75V4.5h6v-.294a.75.75 0 00-.75-.75h-4z" clip-rule="evenodd"/></svg>';
+  deleteBtn.innerHTML = '<i class="fa-solid fa-trash" aria-hidden="true"></i>';
   deleteBtn.addEventListener("click", () => deleteTask(task.id));
 
   left.appendChild(checkbox);
@@ -70,14 +73,15 @@ function renderTasks(tasks) {
   });
 }
 
-async function fetchTasks() {
-  try {
-    const res = await fetch(API_URL);
-    const tasks = await res.json();
-    renderTasks(tasks);
-  } catch (err) {
-    console.error("Error al obtener tareas:", err);
-  }
+function fetchTasks() {
+  return fetch(`${API_URL}/${userId}`)
+    .then((res) => res.json())
+    .then((tasks) => {
+      renderTasks(tasks);
+    })
+    .catch((err) => {
+      console.error("Error al obtener tareas:", err);
+    });
 }
 
 async function addTask(title) {
@@ -85,7 +89,7 @@ async function addTask(title) {
     const res = await fetch(API_URL, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ title, completed: false }),
+      body: JSON.stringify({ title, userId: Number.parseInt(userId) }),
     });
     if (res.ok) {
       await fetchTasks();
@@ -121,12 +125,53 @@ async function completeTask(id, completed) {
   }
 }
 
-taskForm.addEventListener("submit", (e) => {
-  e.preventDefault();
-  const title = taskInput.value.trim();
-  if (!title) return;
-  addTask(title);
-  taskInput.value = "";
-});
+if (taskForm && taskInput) {
+  taskForm.addEventListener("submit", (e) => {
+    e.preventDefault();
+    const title = taskInput.value.trim();
+    if (!title) return;
+    addTask(title);
+    taskInput.value = "";
+  });
+}
 
-fetchTasks();
+function logout() {
+  localStorage.removeItem("access_token");
+  localStorage.removeItem("name");
+  localStorage.removeItem("userId");
+  globalThis.location.href = "login.html";
+}
+
+if (logoutBtn) {
+  logoutBtn.addEventListener("click", logout);
+}
+
+
+async function login(user, password) {
+  try{
+    const res = await fetch(LOGIN_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ user, password }),
+    });
+    if (res.ok) {
+      const data = await res.json();
+      localStorage.setItem("access_token", data.access_token);
+      localStorage.setItem("name", data.name);
+      localStorage.setItem("userId", data.userId);
+      globalThis.location.href="index.html";
+
+
+      await fetchTasks();
+
+    }
+
+  }catch(e){
+    console.error("Error al iniciar sesión:", e);
+  }
+}
+
+
+if (pendingList && completedList) {
+  fetchTasks();
+}

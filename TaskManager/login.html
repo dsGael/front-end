@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="functions/script.js"></script>
+    <title>Login</title>
+</head>
+<body>
+
+    <form action="">
+        <div class="flex flex-col items-center justify-center min-h-screen bg-slate-800">
+                    <div class="w-full max-w-sm p-8 bg-white rounded-xl shadow-2xl border-t-[6px] border-indigo-600">
+                     
+                        <h2 class="mb-8 text-2xl font-bold text-center text-[#1f2937] tracking-wider">INICIAR SESIÓN</h2>
+                        
+                        <div class="mb-6">
+                            <label class="block mb-2 text-sm font-bold text-gray-700" for="email">
+                                Usuario
+                            </label>
+                            <input 
+                                class="w-full px-4 py-3 leading-tight text-gray-700 border border-gray-300 rounded focus:outline-none focus:border-indigo-600 focus:ring-1 focus:ring-indigo-600 transition-colors" 
+                                id="email" 
+                                type="text" 
+                                placeholder="Ingresa tu usuario"
+                            >
+                        </div>
+                        
+                        <div class="mb-8">
+                            <label class="block mb-2 text-sm font-bold text-gray-700" for="password">
+                                Contraseña
+                            </label>
+                            <input 
+                                class="w-full px-4 py-3 mb-3 leading-tight text-gray-700 border border-gray-300 rounded focus:outline-none focus:border-indigo-600 focus:ring-1 focus:ring-indigo-600 transition-colors" 
+                                id="password" 
+                                type="password" 
+                                placeholder="Ingresa tu contraseña"
+                                
+                            >
+                        </div>
+                        
+                            <div class="flex items-center justify-between">
+                                <button 
+                                    class="w-full px-4 py-3 font-bold text-white bg-indigo-600 rounded hover:bg-indigo-800 focus:outline-none focus:shadow-outline transition-colors duration-300 shadow-md transform active:scale-95" 
+                                    type="button" 
+                                    onclick="login(document.getElementById('email').value, document.getElementById('password').value)"
+                            >
+                                Ingresar
+                            </button>
+                            
+                    </div>
+                </div>
+    </form>
+    
+</body>
+</html>

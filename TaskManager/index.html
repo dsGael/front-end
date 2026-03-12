@@ -4,12 +4,25 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://cdn.tailwindcss.com"></script>
+    <link  rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <script type="module" src="./functions/script.js"></script>
+
     <title>Task Manager</title>
 </head>
 <body class="bg-slate-900 min-h-screen flex items-start justify-center pt-16 px-4">
 
     <div class="w-full max-w-lg">
-        <h1 class="text-3xl font-bold text-white text-center mb-8">Task Manager</h1>
+        <div class="flex items-center justify-between mb-8">
+            <h1 class="text-3xl font-bold text-white">Task Manager</h1>
+            <button
+                id="logout-btn"
+                type="button"
+                class="px-4 py-2 rounded-lg bg-slate-700 hover:bg-slate-600 text-white text-m font-semibold transition flex items-center gap-2"
+            >
+                <i class="fa-solid fa-right-from-bracket" aria-hidden="true"></i>
+                <span>Salir</span>
+            </button>
+        </div>
 
         <!-- Formulario -->
         <form id="task-form" class="flex gap-2 mb-6">
@@ -22,10 +35,10 @@
             />
             <button
                 type="submit"
-                class="w-11 h-11 flex items-center justify-center rounded-full bg-indigo-600 hover:bg-indigo-700 text-white text-2xl font-semibold leading-none transition"
+                class="w-11 h-11 flex items-center justify-center rounded-full bg-indigo-600 hover:bg-indigo-700 text-white text-lg font-semibold leading-none transition"
                 aria-label="Agregar tarea"
             >
-                +
+                <i class="fa-solid fa-plus" aria-hidden="true"></i>
             </button>
         </form>
 
@@ -33,18 +46,23 @@
         <p id="empty-msg" class="text-slate-400 text-center hidden mb-6"></p>
 
         <section class="mb-8">
-            <h2 class="text-lg font-semibold text-slate-200 mb-3">Pendientes</h2>
+            <h2 class="text-lg font-semibold text-slate-200 mb-3 flex items-center gap-2">
+                <i class="fa-regular fa-clock" aria-hidden="true"></i>
+                <span>Pendientes</span>
+            </h2>
             <ul id="pending-list" class="space-y-2"></ul>
             <p id="pending-empty" class="text-slate-500 text-sm mt-2 hidden">No hay tareas pendientes.</p>
         </section>
 
         <section>
-            <h2 class="text-lg font-semibold text-slate-200 mb-3">Completadas</h2>
+            <h2 class="text-lg font-semibold text-slate-200 mb-3 flex items-center gap-2">
+                <i class="fa-regular fa-circle-check" aria-hidden="true"></i>
+                <span>Completadas</span>
+            </h2>
             <ul id="completed-list" class="space-y-2"></ul>
             <p id="completed-empty" class="text-slate-500 text-sm mt-2 hidden">Aun no completaste tareas.</p>
         </section>
     </div>
 
-    <script type="module" src="./functions/script.js"></script>
 </body>
 </html>
