@@ -1,7 +1,8 @@
 const API_URL = "https://taskmanagerapi-production-fd8f.up.railway.app/tasks";
 const LOGIN_URL = "https://taskmanagerapi-production-fd8f.up.railway.app/auth/login";
 
-const userId =localStorage.getItem("userId");
+const TOKEN_KEY = "access_token";
+const USER_ID_KEY = "userId";
 
 const pendingList = document.getElementById("pending-list");
 const completedList = document.getElementById("completed-list");
@@ -11,6 +12,75 @@ const emptyMsg = document.getElementById("empty-msg");
 const pendingEmpty = document.getElementById("pending-empty");
 const completedEmpty = document.getElementById("completed-empty");
 const logoutBtn = document.getElementById("logout-btn");
+
+function getAccessToken() {
+  return localStorage.getItem(TOKEN_KEY);
+}
+
+function getUserId() {
+  const rawUserId = localStorage.getItem(USER_ID_KEY);
+  const parsed = Number.parseInt(rawUserId ?? "", 10);
+  return Number.isNaN(parsed) ? null : parsed;
+}
+
+function parseJwtPayload(token) {
+  try {
+    const [, payloadPart] = token.split(".");
+    if (!payloadPart) return null;
+    const base64 = payloadPart.replace(/-/g, "+").replace(/_/g, "/");
+    const jsonPayload = decodeURIComponent(
+      atob(base64)
+        .split("")
+        .map((char) => `%${(`00${char.charCodeAt(0).toString(16)}`).slice(-2)}`)
+        .join("")
+    );
+    return JSON.parse(jsonPayload);
+  } catch {
+    return null;
+  }
+}
+
+function isTokenExpired(token) {
+  const payload = parseJwtPayload(token);
+  if (!payload || !payload.exp) return false;
+  const nowInSeconds = Math.floor(Date.now() / 1000);
+  return nowInSeconds >= payload.exp;
+}
+
+function hasValidSession() {
+  const token = getAccessToken();
+  const userId = getUserId();
+  if (!token || !userId) return false;
+
+  if (isTokenExpired(token)) {
+    localStorage.removeItem(TOKEN_KEY);
+    return false;
+  }
+
+  return true;
+}
+
+async function apiRequest(url, options = {}) {
+  const token = getAccessToken();
+  const headers = {
+    ...(options.headers || {}),
+  };
+
+  if (token) {
+    headers.Authorization = `Bearer ${token}`;
+  }
+
+  const response = await fetch(url, {
+    ...options,
+    headers,
+  });
+
+  if (response.status === 401) {
+    logout();
+  }
+
+  return response;
+}
 
 function createTaskElement(task) {
   const li = document.createElement("li");
@@ -74,8 +144,17 @@ function renderTasks(tasks) {
 }
 
 function fetchTasks() {
-  return fetch(`${API_URL}/${userId}`)
-    .then((res) => res.json())
+  const userId = getUserId();
+  if (!userId) {
+    logout();
+    return Promise.resolve();
+  }
+
+  return apiRequest(`${API_URL}/${userId}`)
+    .then((res) => {
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      return res.json();
+    })
     .then((tasks) => {
       renderTasks(tasks);
     })
@@ -86,10 +165,16 @@ function fetchTasks() {
 
 async function addTask(title) {
   try {
-    const res = await fetch(API_URL, {
+    const userId = getUserId();
+    if (!userId) {
+      logout();
+      return;
+    }
+
+    const res = await apiRequest(API_URL, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ title, userId: Number.parseInt(userId) }),
+      body: JSON.stringify({ title, userId }),
     });
     if (res.ok) {
       await fetchTasks();
@@ -101,7 +186,7 @@ async function addTask(title) {
 
 async function deleteTask(id) {
   try {
-    const res = await fetch(`${API_URL}/${id}`, { method: "DELETE" });
+    const res = await apiRequest(`${API_URL}/${id}`, { method: "DELETE" });
     if (res.ok) {
       await fetchTasks();
     }
@@ -112,7 +197,7 @@ async function deleteTask(id) {
 
 async function completeTask(id, completed) {
   try {
-    const res = await fetch(`${API_URL}/${id}`, {
+    const res = await apiRequest(`${API_URL}/${id}`, {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ completed }),
@@ -136,9 +221,9 @@ if (taskForm && taskInput) {
 }
 
 function logout() {
-  localStorage.removeItem("access_token");
+  localStorage.removeItem(TOKEN_KEY);
   localStorage.removeItem("name");
-  localStorage.removeItem("userId");
+  localStorage.removeItem(USER_ID_KEY);
   globalThis.location.href = "login.html";
 }
 
@@ -156,13 +241,10 @@ async function login(user, password) {
     });
     if (res.ok) {
       const data = await res.json();
-      localStorage.setItem("access_token", data.access_token);
+      localStorage.setItem(TOKEN_KEY, data.access_token);
       localStorage.setItem("name", data.name);
-      localStorage.setItem("userId", data.userId);
+      localStorage.setItem(USER_ID_KEY, String(data.userId));
       globalThis.location.href="index.html";
-
-
-      await fetchTasks();
 
     }
 
@@ -173,5 +255,9 @@ async function login(user, password) {
 
 
 if (pendingList && completedList) {
-  fetchTasks();
+  if (!hasValidSession()) {
+    logout();
+  } else {
+    fetchTasks();
+  }
 }
