@@ -8,6 +8,9 @@ https://front-end-eta-amber.vercel.app/
 
 ## Características 
 
+
+
+* **Manejo de sesiones:** Inicia y cierra sesión, manejo de JWT con autenticación desde la API.
 * **Gestión CRUD Completa:** Crea, visualiza, edita y elimina tareas en tiempo real.
 * **Filtros de Estado:** Clasificación inteligente de tareas (Pendientes y Completadas).
 * **Sincronización de Estado:** UI que actualiza la interfaz instantáneamente mientras el backend procesa la petición.
