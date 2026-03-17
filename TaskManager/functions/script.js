@@ -12,6 +12,7 @@ const emptyMsg = document.getElementById("empty-msg");
 const pendingEmpty = document.getElementById("pending-empty");
 const completedEmpty = document.getElementById("completed-empty");
 const logoutBtn = document.getElementById("logout-btn");
+const userGreeting = document.getElementById("user-greeting");
 
 function getAccessToken() {
   return localStorage.getItem(TOKEN_KEY);
@@ -21,6 +22,10 @@ function getUserId() {
   const rawUserId = localStorage.getItem(USER_ID_KEY);
   const parsed = Number.parseInt(rawUserId ?? "", 10);
   return Number.isNaN(parsed) ? null : parsed;
+}
+
+function getUserName() {
+  return localStorage.getItem("name") ?? "";
 }
 
 function parseJwtPayload(token) {
@@ -227,6 +232,13 @@ function logout() {
   globalThis.location.href = "login.html";
 }
 
+function renderUserGreeting() {
+  if (!userGreeting) return;
+
+  const name = getUserName().trim();
+  userGreeting.textContent = name ? `Bienvenido ${name}` : "Hola,";
+}
+
 if (logoutBtn) {
   logoutBtn.addEventListener("click", logout);
 }
@@ -258,6 +270,7 @@ if (pendingList && completedList) {
   if (!hasValidSession()) {
     logout();
   } else {
+    renderUserGreeting();
     fetchTasks();
   }
 }
