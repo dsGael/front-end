@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<script src="https://cdn.tailwindcss.com"></script>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+	<script defer src="script.js"></script>
+	<title>Posts</title>
+</head>
+<body class="bg-slate-900 min-h-screen flex flex-col items-center pt-10 px-4">
+
+	<header class="w-full max-w-4xl flex items-center justify-between mb-8">
+		<div>
+			<h1 class="text-3xl font-bold text-white">Comment Posts</h1>
+		</div>
+		<div class="flex items-center gap-3">
+			<span id="user-greeting" class="text-slate-200 font-medium text-lg">Hola</span>
+			<button
+				id="logout-btn"
+				type="button"
+				class="px-4 py-2 rounded-lg bg-slate-700 hover:bg-slate-600 text-white text-sm font-semibold transition flex items-center gap-2"
+			>
+				<i class="fa-solid fa-right-from-bracket" aria-hidden="true"></i>
+				<span>Salir</span>
+			</button>
+		</div>
+	</header>
+
+	<main class="w-full max-w-4xl">
+		<form id="comment-form" class="flex gap-2 mb-6">
+			<input
+				id="comment-input"
+				type="text"
+				placeholder="Escribe un comentario..."
+				class="flex-1 px-4 py-3 rounded-lg bg-slate-800 text-white border border-slate-700 focus:outline-none focus:border-indigo-500"
+				maxlength="280"
+				required
+			>
+			<button
+				type="submit"
+				class="px-5 py-3 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white font-semibold transition"
+			>
+				Publicar
+			</button>
+		</form>
+
+		<p id="empty-msg" class="text-slate-400 text-center hidden">Aun no hay comentarios.</p>
+
+		<ul id="comment-list" class="space-y-3"></ul>
+	</main>
+
+</body>
+</html>
